@@ -5,6 +5,12 @@
  */
 package imagefilter;
 
+import ij.IJ;
+import ij.ImagePlus;
+import ij.process.ImageProcessor;
+import java.awt.Image;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
 /**
@@ -12,6 +18,8 @@ import javax.swing.JFileChooser;
  * @author gabrielle
  */
 public class AppFilter extends javax.swing.JFrame {
+    
+    ImagePlus imp;
 
     /**
      * Creates new form AppFilter
@@ -32,8 +40,10 @@ public class AppFilter extends javax.swing.JFrame {
         btOpen = new javax.swing.JButton();
         btFilter = new javax.swing.JButton();
         jpImageView = new javax.swing.JPanel();
+        jLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Abrindo Imagens DICOM");
         setMinimumSize(new java.awt.Dimension(800, 800));
 
         btOpen.setText("Abrir Seletor de Imagem");
@@ -51,16 +61,21 @@ public class AppFilter extends javax.swing.JFrame {
         });
 
         jpImageView.setBackground(new java.awt.Color(255, 255, 255));
+        jpImageView.setMinimumSize(new java.awt.Dimension(800, 800));
+
+        jLabel.setMinimumSize(new java.awt.Dimension(800, 800));
 
         javax.swing.GroupLayout jpImageViewLayout = new javax.swing.GroupLayout(jpImageView);
         jpImageView.setLayout(jpImageViewLayout);
         jpImageViewLayout.setHorizontalGroup(
             jpImageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 445, Short.MAX_VALUE)
+            .addGroup(jpImageViewLayout.createSequentialGroup()
+                .addComponent(jLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 780, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jpImageViewLayout.setVerticalGroup(
             jpImageViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 439, Short.MAX_VALUE)
+            .addComponent(jLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -73,37 +88,35 @@ public class AppFilter extends javax.swing.JFrame {
                     .addComponent(btOpen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(33, 33, 33)
-                .addComponent(jpImageView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addComponent(jpImageView, javax.swing.GroupLayout.PREFERRED_SIZE, 783, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(94, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jpImageView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jpImageView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btOpen)
                         .addGap(27, 27, 27)
-                        .addComponent(btFilter)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                        .addComponent(btFilter)
+                        .addGap(0, 727, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btOpenActionPerformed
-        // TODO add your handling code here:
-        JFileChooser fc = new JFileChooser();
-        
-        if(fc.showOpenDialog(btOpen) == JFileChooser.APPROVE_OPTION){
-            java.io.File f = fc.getSelectedFile();
-            
-        }
+        imp = IJ.openImage();
+        jLabel.setIcon(new ImageIcon(imp.getImage()));
     }//GEN-LAST:event_btOpenActionPerformed
 
     private void btFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFilterActionPerformed
-        // TODO add your handling code here:
+        Image_Inverter iFilter = new Image_Inverter();
+        iFilter.run(imp.getProcessor());
+        jLabel.setIcon(new ImageIcon(imp.getBufferedImage()));
     }//GEN-LAST:event_btFilterActionPerformed
 
     /**
@@ -144,6 +157,7 @@ public class AppFilter extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btFilter;
     private javax.swing.JButton btOpen;
+    private javax.swing.JLabel jLabel;
     private javax.swing.JPanel jpImageView;
     // End of variables declaration//GEN-END:variables
 }
